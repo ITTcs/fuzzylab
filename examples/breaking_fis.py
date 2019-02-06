@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 fis = sugfis()
 
 fis.addInput([0.12, 3.5], Name='distance')
-fis.addMF('distance','gaussmf',[0.31296, 0.12],Name='minimum')
+fis.addMF('distance','gaussmf',[0.31296, 0.1200],Name='minimum')
 fis.addMF('distance','gaussmf',[0.31296, 1.2467],Name='short')
 fis.addMF('distance','gaussmf',[0.31296, 2.3733],Name='medium')
-fis.addMF('distance','gaussmf',[0.31296, 3.5],Name='long')
+fis.addMF('distance','gaussmf',[0.31296, 3.5000],Name='long')
 
 fis.addOutput([0, 2.22], Name='velocity')
-fis.addMF('velocity','constant',0,Name='null')
+fis.addMF('velocity','constant',0.00,Name='null')
 fis.addMF('velocity','constant',0.74,Name='minimum')
 fis.addMF('velocity','constant',1.48,Name='recommended')
 fis.addMF('velocity','constant',2.22,Name='maximum')
@@ -29,6 +29,7 @@ ruleList = [[0, 0, 1, 1], # Rule 1
 fis.addRule(ruleList)
 
 y = evalfis(fis, 0.12)
+print(y)
 
 plotmf(fis,'input',0)
 gensurf(fis)

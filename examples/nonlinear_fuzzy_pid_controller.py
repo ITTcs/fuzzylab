@@ -38,9 +38,9 @@ ruleList = [[0, 0, 0, 1, 1], # Rule 1
 
 fis.addRule(ruleList)
 
-step = 1
-E = linspace(-10, step, 10)
-CE = linspace(-10, step, 10)
+Step = 1
+E = linspace(-10, Step, 10)
+CE = linspace(-10, Step, 10)
 N = len(E)
 
 LookUpTableData = np.zeros((N, N))

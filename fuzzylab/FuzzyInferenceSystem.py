@@ -23,10 +23,12 @@ class FuzzyInferenceSystem:
             var_index -= len(self.Inputs)
             self.Outputs[var_index].MembershipFunctions.append(new_mf)
  
+
     def addRule(self, rule_matrix):
         for rule_def in rule_matrix:
             new_rule = fisrule(rule_def, len(self.Inputs))
             self.Rules.append(new_rule)
+
 
     def __addVariable(self, varType, *varargin, **options):
         new_variable = fisvar(*varargin, **options)

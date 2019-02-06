@@ -7,9 +7,6 @@ from .defuzz import defuzz
 def evalfis(fis, user_input):
 
     if type(user_input) is not np.ndarray:
-        if type(user_input) is float:
-            user_input = [user_input]
-        
         user_input = np.asarray([user_input])
 
     if user_input.ndim is 1:
@@ -21,20 +18,20 @@ def evalfis(fis, user_input):
     if m is num_inputs and n is not num_inputs:
         user_input = user_input.transpose()
 
-    output = np.zeros(user_input.shape)
+    output = np.zeros((len(user_input), len(fis.Outputs)))
 
-    for i in range(user_input.size):
+    for i in range(len(user_input)):
         rule_input = fuzzify_input(fis, user_input[i])
 
         firing_strength = eval_firing_strength (fis, rule_input)
         
         if type(fis) is sugfis:
             rule_output = eval_rules_sugeno(fis, firing_strength, user_input[i])
-            # fuzzy_output = aggregate_output_sugeno (fis, rule_output)
-            fuzzy_output = rule_output
+            fuzzy_output = aggregate_output_sugeno (fis, rule_output)
             output[i] = defuzzify_output_sugeno (fis, fuzzy_output)
 
     return output
+
 
 def fuzzify_input(fis, user_input):
     num_rules  = len(fis.Rules)
@@ -47,62 +44,16 @@ def fuzzify_input(fis, user_input):
     for i in range(num_rules):
         antecedent = fis.Rules[i].Antecedent
         for j in range(num_inputs):
-            mu = 0
             crisp_x = user_input[j]
 
-            # Get the value of mu (with adjustment for the hedge
-            # and not_flag).
-
-            #mf_index, hedge, not_flag = get_mf_index_and_hedge(antecedent[j])
-            
-            #print(mf_index)
-
             mf_index = antecedent[j]
-
-            #if mf_index >= 0:
             mf = fis.Inputs[j].MembershipFunctions[mf_index]
             mu = evalmf (mf, crisp_x)
-            # Store the fuzzified input in rule_input.
-                        
+
+            # Store the fuzzified input in rule_input.    
             rule_input[i, j] = mu
     
     return rule_input
-
-#def get_mf_index_and_hedge(mf_index_and_hedge):
-def get_mf_index(mf_index_and_hedge):
-    ## Set flag to handle "not", indicated by a minus sign in the
-    ## antecedent.    
-
-    #if mf_index_and_hedge < 0:
-        #print(13)
-    #    not_flag = True
-    #    mf_index_and_hedge = -mf_index_and_hedge
-    #else:
-        #print(14)
-    #    not_flag = False
-
-    #print('not_flag =', not_flag)
-
-    # The membership function index is the positive whole number portion
-    # of an element in the antecedent.
-
-    mf_index = int(np.fix(mf_index_and_hedge))
-
-    # For custom hedges and the four built-in hedges "somewhat", "very",
-    # "extremely", and "very very", return the power to which the
-    # membership value should be raised. The hedges are indicated by the
-    # fractional part of the corresponding rule_matrix entry (rounded to
-    # 2 digits). 
-
-    #if mf_index >= 0:
-        #print(15)
-    #    hedge = round (100 * (mf_index_and_hedge - mf_index)) / 10
-    #else:
-        #print(16)
-    #    hedge = 0
-
-    #return mf_index, hedge, not_flag
-    return mf_index
  
 
 def eval_firing_strength (fis, rule_input):
@@ -134,10 +85,10 @@ def eval_firing_strength (fis, rule_input):
             connect = fis.OrMethod
 
         if connect is 'prod':
-            #print(antecedent_mus)
             firing_strength[i] = rule.Weight * np.prod(antecedent_mus)
 
     return firing_strength
+
 
 def eval_rules_sugeno(fis, firing_strength, user_input):
 
@@ -158,7 +109,6 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
     #      function's parameters and the vector formed by appending a 1
     #      to the user input vector.
 
-    #print(firing_strength)
     for i in range(num_rules):
         rule = fis.Rules[i]
         rule_firing_strength = firing_strength[i]
@@ -166,33 +116,25 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
         if rule_firing_strength is not 0:
             for j in range(num_outputs):
                 
-                ## Compute the singleton height for this (rule, output) pair.
-                ## Note that for Sugeno FISs, the hedge and not flag are handled
-                ## by adjusting the height of the singletons for each
-                ## (rule, output) pair.                
-    
-                #mf_index, hedge, not_flag = get_mf_index_and_hedge(
-                #    rule.Consequent[j])
-
                 mf_index = rule.Consequent[j]
 
                 height = rule_firing_strength
 
                 # Compute the singleton location for this (rule, output) pair.
 
-                if mf_index >= 0:
-                    mf = fis.Outputs[j].MembershipFunctions[mf_index]
+                mf = fis.Outputs[j].MembershipFunctions[mf_index]
 
-                    if mf.Type is 'constant':
-                        location = mf.Parameters
+                if mf.Type is 'constant':
+                    location = mf.Parameters
 
-                    # Store result in column of rule_output corresponding
-                    # to the (rule, output) pair.   
+                # Store result in column of rule_output corresponding
+                # to the (rule, output) pair.   
 
-                    rule_output[0, (j - 1) * num_rules + i] = location
-                    rule_output[1, (j - 1) * num_rules + i] = height
+                rule_output[0, (j - 1) * num_rules + i] = location
+                rule_output[1, (j - 1) * num_rules + i] = height
     
     return rule_output
+
 
 def aggregate_output_sugeno(fis, rule_output):
 
@@ -204,10 +146,12 @@ def aggregate_output_sugeno(fis, rule_output):
     # then store the result as a structure in fuzzy_output.
 
     for i in range(num_outputs):
-        unagg_output = rule_output[:, (i-1)*num_rules+1 : i*num_rules]
-        aggregated_output = aggregate_fis_output(fis.aggMethod, unagg_output)
+        unagg_output = rule_output[:, i*num_rules : (i+1)*num_rules]
+        aggregated_output = aggregate_fis_output(fis.AggregationMethod, unagg_output)
+        fuzzy_output.append(aggregated_output)
 
-    return fuzzy_output
+    return np.asarray(fuzzy_output)
+
 
 #----------------------------------------------------------------------
 # Function: aggregate_fis_output
@@ -217,8 +161,35 @@ def aggregate_output_sugeno(fis, rule_output):
 def aggregate_fis_output(fis_aggmethod, rule_output):
 
     # Initialize output matrix (multiple_singletons).
-    mult_singletons = 0
+    rule_output = np.transpose(rule_output)
+    mult_singletons = rule_output[rule_output[:,0].argsort()]
+
+    # If adjacent rows represent singletons at the same location, then
+    # combine them using the FIS aggregation method.
+
+    for i in range(len(mult_singletons) - 1):
+        if mult_singletons[i,0] == mult_singletons[i+1, 0]:
+            if fis_aggmethod is 'sum':
+                mult_singletons[i + 1, 1] = mult_singletons[i, 1] + mult_singletons[i + 1, 1]
+
+            mult_singletons[i, 1] = 0
+
+    # Return the transpose of the matrix after removing 0-height
+    # singletons.
+
+    mult_singletons = np.transpose(remove_null_rows(mult_singletons))
+
     return mult_singletons
+
+
+def remove_null_rows(x):
+    y = []
+    for i in range(len(x)):
+        if x[i, 1] != 0:
+            y.append(x[i])
+
+    return np.asarray(y)
+
 
 def defuzzify_output_sugeno(fis, aggregated_output):
 
@@ -226,7 +197,7 @@ def defuzzify_output_sugeno(fis, aggregated_output):
     output = np.zeros(num_outputs)
 
     for i in range(num_outputs):
-        next_agg_output = aggregated_output
+        next_agg_output = aggregated_output[i]
         x = next_agg_output[0]
         y = next_agg_output[1]
         output[i] = defuzz(x, y, fis.DefuzzificationMethod)

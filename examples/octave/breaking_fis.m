@@ -25,7 +25,7 @@ fis = addrule(fis, ruleList);
 
 y = evalfis(0.12, fis)
 
-plotmf(fis, 'input', 1)
-gensurf(fis)
+plotmf(fis, 'input', 1);
+gensurf(fis);
 
 pause(3);

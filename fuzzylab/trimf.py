@@ -27,6 +27,9 @@ def trimf(x, params):
     assert a <= b, 'First parameter must be less than or equal to second parameter.'
     assert b <= c, 'Second parameter must be less than or equal to third parameter.'
 
+    if type(x) is not np.ndarray:
+        x = np.asarray([x])
+
     y = np.zeros(len(x))
   
     # Left slope
