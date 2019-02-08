@@ -1,6 +1,5 @@
 import numpy as np
 from .evalmf import evalmf
-from .wtaver import wtaver
 from .sugfis import sugfis
 from .defuzz import defuzz
 
@@ -29,6 +28,9 @@ def evalfis(fis, user_input):
             rule_output = eval_rules_sugeno(fis, firing_strength, user_input[i])
             fuzzy_output = aggregate_output_sugeno (fis, rule_output)
             output[i] = defuzzify_output_sugeno (fis, fuzzy_output)
+
+    if output.shape == (1,1):
+        output = output[0,0]
 
     return output
 

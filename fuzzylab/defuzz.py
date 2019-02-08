@@ -29,7 +29,7 @@ def defuzz(x, y, defuzz_method):
         which = np.argmax(abs(tmp))
         return tmp[which]
     elif defuzz_method is 'wtaver':
-        return sum (x * y) / sum (y)
+        return sum(x * y) / sum (y)
     else:
         raise ValueError('The input for `type`, %s, was incorrect.' % (type))
     
