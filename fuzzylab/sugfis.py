@@ -9,14 +9,13 @@ class sugfis(FuzzyInferenceSystem):
         AggregationMethod       = 'sum',
         DefuzzificationMethod   = 'wtaver'):
 
+        FuzzyInferenceSystem.__init__(self)
+
         self.Name                       = Name
         self.AndMethod                  = AndMethod
         self.OrMethod                   = OrMethod
         self.ImplicationMethod          = ImplicationMethod
         self.AggregationMethod          = AggregationMethod
         self.DefuzzificationMethod      = DefuzzificationMethod
-        self.Inputs                     = []
-        self.Outputs                    = []
-        self.Rules                      = []
         self.DisableStructuralChecks    = 0
     

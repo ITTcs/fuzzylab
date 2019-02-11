@@ -27,6 +27,9 @@ def trapmf(x, params):
     assert b <= c, 'Second parameter must be less than or equal to third parameter.'
     assert c <= d, 'Third parameter must be less than or equal to fourth parameter.'
 
+    if type(x) is not np.ndarray:
+        x = np.asarray([x])
+
     y = np.zeros(len(x))
 
     # Left slope

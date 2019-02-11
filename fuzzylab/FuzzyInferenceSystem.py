@@ -3,6 +3,11 @@ from .fismf import fismf
 from .fisrule import fisrule
 
 class FuzzyInferenceSystem:
+    def __init__(self):
+        self.Inputs     = []
+        self.Outputs    = []
+        self.Rules      = []
+
     def addInput(self, *varargin, **options):
         self.__addVariable('input', *varargin, **options)
 
@@ -11,13 +16,13 @@ class FuzzyInferenceSystem:
         self.__addVariable('output', *varargin, **options)
 
 
-    def addMF(self, varName, *varargin, **options):
-        varsName = [var.Name for var in self.Inputs + self.Outputs]
-        var_index = varsName.index(varName)
+    def addMF(self, var_name, *varargin, **options):
+        vars_name = [var.Name for var in self.Inputs + self.Outputs]
+        var_index = vars_name.index(var_name)
         
         new_mf = fismf(*varargin, Name=options.get('Name'))
 
-        if varsName.index(varName) < len(self.Inputs):
+        if vars_name.index(var_name) < len(self.Inputs):
             self.Inputs[var_index].MembershipFunctions.append(new_mf)
         else:
             var_index -= len(self.Inputs)
@@ -30,10 +35,10 @@ class FuzzyInferenceSystem:
             self.Rules.append(new_rule)
 
 
-    def __addVariable(self, varType, *varargin, **options):
+    def __addVariable(self, in_or_out, *varargin, **options):
         new_variable = fisvar(*varargin, **options)
 
-        if varType is 'input':
+        if in_or_out is 'input':
             self.Inputs.append(new_variable)
         else:
             self.Outputs.append(new_variable)

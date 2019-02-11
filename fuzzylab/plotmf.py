@@ -9,7 +9,7 @@ def plotmf(fis, in_or_out, var_index, num_pts=181):
         var = fis.Inputs[var_index]
     else:
         var = fis.Outputs[var_index]
-        
+    
     num_mfs = len(var.MembershipFunctions)
 
     x = np.linspace(var.Range[0], var.Range[1], num_pts)
