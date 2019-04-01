@@ -3,20 +3,22 @@ import numpy as np
 
 from .evalmf import evalmf
 
-def plotmf(fis, in_or_out, var_index, num_pts=181):
+def plotmf(fis, variableType, variableIndex, numPoints=181, fontSize=11.5):
 
-    if in_or_out.lower() == 'input':
-        var = fis.Inputs[var_index]
+    if variableType.lower() == 'input':
+        var = fis.Inputs[variableIndex]
     else:
-        var = fis.Outputs[var_index]
+        var = fis.Outputs[variableIndex]
     
     num_mfs = len(var.MembershipFunctions)
 
-    x = np.linspace(var.Range[0], var.Range[1], num_pts)
-    y = np.zeros((num_pts, num_mfs))
+    x = np.linspace(var.Range[0], var.Range[1], numPoints)
+    y = np.zeros((numPoints, num_mfs))
  
     for i in range(num_mfs):
         y[:, i] = evalmf(var.MembershipFunctions[i], x)
+
+    plt.rcParams.update({'font.size': fontSize})
 
     plt.xlim(var.Range)
     plt.ylim([-0.1, 1.1])
