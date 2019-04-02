@@ -3,7 +3,7 @@ from .evalmf import evalmf
 from .sugfis import sugfis
 from .defuzz import defuzz
 
-def evalfis(fis, user_input):
+def evalfis(fis, user_input, rule_firing=False):
 
     if type(user_input) is not np.ndarray:
         user_input = np.asarray([user_input])
@@ -32,7 +32,10 @@ def evalfis(fis, user_input):
     if output.shape == (1,1):
         output = output[0,0]
 
-    return output
+    if rule_firing:
+        return output, firing_strength
+    else:
+        return output
 
 
 def fuzzify_input(fis, user_input):

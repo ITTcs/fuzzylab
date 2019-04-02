@@ -1,6 +1,4 @@
-from fuzzylab import sugfis, linspace, evalfis, plotmf, gensurf
-import numpy as np
-import matplotlib.pyplot as plt
+from fuzzylab import sugfis
 
 fis = sugfis()
 
@@ -27,9 +25,3 @@ ruleList = [[0, 0, 1, 1], # Rule 1
             [3, 3, 1, 1]] # Rule 4
 
 fis.addRule(ruleList)
-
-y = evalfis(fis, 0.12)
-print(y)
-
-plotmf(fis,'input',0)
-gensurf(fis)
