@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fuzzylab",
-    version="0.0.10",
+    version="0.0.11",
     author="Eduardo Avelar",
     author_email="eavelardev@gmail.com",
     description="Python Fuzzy Logic library",
