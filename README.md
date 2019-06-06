@@ -48,3 +48,15 @@ show()
 ```
 
 ![trimf](https://raw.githubusercontent.com/ITTcs/fuzzylab/master/images/trimf.png)
+
+To cite this repository in publications:
+
+    @misc{fuzzylab,
+      author = {Avelar, Eduardo},
+      title = {fuzzylab},
+      year = {2018},
+      publisher = {GitHub},
+      journal = {GitHub repository},
+      howpublished = {\url{https://github.com/ITTcs/fuzzylab}},
+    }
+
