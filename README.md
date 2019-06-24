@@ -1,5 +1,5 @@
 # fuzzylab
-Python Fuzzy Logic library based on Octave Fuzzy Logic Toolkit
+Python Fuzzy Logic library based on Octave Fuzzy Logic Toolkit, considered as a mostly MATLAB-compatible fuzzy logic toolkit for Octave.
 
 The way to use the fuzzylab functions is based on Matlab R2019a Fuzzy Logic Toolbox functions.
 
