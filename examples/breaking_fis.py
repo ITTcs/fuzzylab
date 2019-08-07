@@ -1,6 +1,6 @@
 from fuzzylab import sugfis
 
-fis = sugfis()
+fis = sugfis('breaking')
 
 fis.addInput([0.12, 3.5], Name='distance')
 fis.addMF('distance','gaussmf',[0.31296, 0.1200],Name='minimum')

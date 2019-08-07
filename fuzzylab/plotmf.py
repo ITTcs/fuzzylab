@@ -3,7 +3,9 @@ import numpy as np
 
 from .evalmf import evalmf
 
-def plotmf(fis, variableType, variableIndex, numPoints=181, fontSize=11.5):
+def plotmf(fis, variableType, variableIndex, numPoints=181, 
+            fontSize=11.5, ylabel='Degree of membership', tex_out='', show=True,
+            ggplot=False):
 
     if variableType.lower() == 'input':
         var = fis.Inputs[variableIndex]
@@ -18,12 +20,15 @@ def plotmf(fis, variableType, variableIndex, numPoints=181, fontSize=11.5):
     for i in range(num_mfs):
         y[:, i] = evalmf(var.MembershipFunctions[i], x)
 
-    plt.rcParams.update({'font.size': fontSize})
+    if show and tex_out == '':
+        plt.rcParams.update({'font.size': fontSize})
+    if ggplot:
+        plt.style.use("ggplot")
 
     plt.xlim(var.Range)
     plt.ylim([-0.1, 1.1])
     plt.xlabel(var.Name)
-    plt.ylabel('Degree of membership')
+    plt.ylabel(ylabel)
 
     for i in range(num_mfs):
         center_index = abs(y[:,i] - max(y[:,i])) < 0.001
@@ -33,7 +38,7 @@ def plotmf(fis, variableType, variableIndex, numPoints=181, fontSize=11.5):
         canvas = ax.figure.canvas
 
         h_text = ax.text(x_pos, 1.03, var.MembershipFunctions[i].Name,
-            horizontalalignment='center')
+            horizontalalignment='center', fontsize='small')
         h_text.draw(canvas.get_renderer())
 
         ext = h_text.get_window_extent()
@@ -47,4 +52,14 @@ def plotmf(fis, variableType, variableIndex, numPoints=181, fontSize=11.5):
             h_text.set_position([var.Range[1] - 0.01 * np.diff(var.Range), 1.03])
         
     plt.plot(x, y)
-    plt.show()
+
+    if tex_out != '':
+        import matplotlib2tikz
+
+        if tex_out.endswith('.tex') is False:
+            tex_out += '.tex'
+
+        matplotlib2tikz.save(filepath=tex_out)
+
+    if show:
+        plt.show()

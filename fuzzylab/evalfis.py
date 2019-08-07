@@ -51,7 +51,7 @@ def fuzzify_input(fis, user_input):
         for j in range(num_inputs):
             crisp_x = user_input[j]
 
-            mf_index = antecedent[j]
+            mf_index = antecedent[j] - 1
             mf = fis.Inputs[j].MembershipFunctions[mf_index]
             mu = evalmf (mf, crisp_x)
 
@@ -89,7 +89,7 @@ def eval_firing_strength (fis, rule_input):
         else:
             connect = fis.OrMethod
 
-        if connect is 'prod':
+        if connect == 'prod':
             firing_strength[i] = rule.Weight * np.prod(antecedent_mus)
 
     return firing_strength
@@ -121,7 +121,7 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
         if rule_firing_strength is not 0:
             for j in range(num_outputs):
                 
-                mf_index = rule.Consequent[j]
+                mf_index = rule.Consequent[j] - 1
 
                 height = rule_firing_strength
 
@@ -129,8 +129,8 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
 
                 mf = fis.Outputs[j].MembershipFunctions[mf_index]
 
-                if mf.Type is 'constant':
-                    location = mf.Parameters
+                if mf.Type == 'constant':
+                    location = mf.Parameters[0]
 
                 # Store result in column of rule_output corresponding
                 # to the (rule, output) pair.   
@@ -174,7 +174,7 @@ def aggregate_fis_output(fis_aggmethod, rule_output):
 
     for i in range(len(mult_singletons) - 1):
         if mult_singletons[i,0] == mult_singletons[i+1, 0]:
-            if fis_aggmethod is 'sum':
+            if fis_aggmethod == 'sum':
                 mult_singletons[i + 1, 1] = mult_singletons[i, 1] + mult_singletons[i + 1, 1]
 
             mult_singletons[i, 1] = 0

@@ -1,0 +1,36 @@
+[System]
+Name='breaking'
+Type='sugeno'
+Version=2.0
+NumInputs=1
+NumOutputs=1
+NumRules=4
+AndMethod='prod'
+OrMethod='probor'
+ImpMethod='prod'
+AggMethod='sum'
+DefuzzMethod='wtaver'
+
+[Input1]
+Name='distance'
+Range=[0.12 3.5]
+NumMFs=4
+MF1='minimum':'gaussmf',[0.31296 0.12]
+MF2='short':'gaussmf',[0.31296 1.2467]
+MF3='medium':'gaussmf',[0.31296 2.3733]
+MF4='long':'gaussmf',[0.31296 3.5]
+
+[Output1]
+Name='velocity'
+Range=[0 2.22]
+NumMFs=4
+MF1='null':'constant',[0.0]
+MF2='minimum':'constant',[0.74]
+MF3='recommended':'constant',[1.48]
+MF4='maximum':'constant',[2.22]
+
+[Rules]
+0, 0 (1) : 1
+1, 1 (1) : 1
+2, 2 (1) : 1
+3, 3 (1) : 1

@@ -25,9 +25,15 @@ class FuzzyInferenceSystem:
         new_mf = fismf(*varargin, Name=options.get('Name'))
 
         if vars_name.index(var_name) < len(self.Inputs):
+            if new_mf.Name is None:
+                num_mfs = len(self.Inputs[var_index].MembershipFunctions)
+                new_mf.Name = 'mf'+str(num_mfs+1)
             self.Inputs[var_index].MembershipFunctions.append(new_mf)
         else:
             var_index -= len(self.Inputs)
+            if new_mf.Name is None:
+                num_mfs = len(self.Outputs[var_index].MembershipFunctions)
+                new_mf.Name = 'mf'+str(num_mfs+1)
             self.Outputs[var_index].MembershipFunctions.append(new_mf)
  
 

@@ -12,6 +12,7 @@ class sugfis(FuzzyInferenceSystem):
         FuzzyInferenceSystem.__init__(self)
 
         self.Name                       = Name
+        self.Type                       = 'sugeno'
         self.AndMethod                  = AndMethod
         self.OrMethod                   = OrMethod
         self.ImplicationMethod          = ImplicationMethod
