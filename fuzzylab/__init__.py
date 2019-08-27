@@ -13,3 +13,4 @@ from fuzzylab.gensurf import gensurf
 from fuzzylab.evalfis import evalfis
 from fuzzylab.writefis import writeFIS
 from fuzzylab.readfis import readfis
+from fuzzylab.gaussmf2 import gaussmf2 
