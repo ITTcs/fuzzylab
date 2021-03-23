@@ -3,15 +3,20 @@ Python Fuzzy Logic library based on Octave Fuzzy Logic Toolkit, considered as a 
 
 The way to use the fuzzylab functions is based on Matlab R2019a Fuzzy Logic Toolbox functions.
 
-## Install
+
+## Research work
+
+[Fuzzy Logic Controller with Fuzzylab Python Library and the Robot Operating System for Autonomous Robot Navigation: A Practical Approach](https://doi.org/10.1007/978-3-030-35445-9_27)
+
+## Installation
 
 ```
-pip install -U fuzzylab
+pip install fuzzylab
 ```
 
-## Use
+## Usage
 
-In the folder [notebooks](https://github.com/ITTcs/fuzzylab/tree/master/notebooks) exists notebook examples, for a starting point to the library.
+In the folder [notebooks](https://github.com/ITTcs/fuzzylab/tree/master/notebooks) there are notebook examples, for a starting point of the library.
 
 In all the notebooks it is initialized installing the fuzzylab library with 
 
@@ -49,14 +54,22 @@ show()
 
 ![trimf](https://raw.githubusercontent.com/ITTcs/fuzzylab/master/images/trimf.png)
 
-To cite this repository in publications:
+## Citing fuzzylab
 
-    @misc{fuzzylab,
-      author = {Avelar, Eduardo},
-      title = {fuzzylab},
-      year = {2019},
-      publisher = {GitHub},
-      journal = {GitHub repository},
-      howpublished = {\url{https://github.com/ITTcs/fuzzylab}},
+    @Inbook{Avelar2020,
+      author="Avelar, Eduardo
+      and Castillo, Oscar
+      and Soria, Jos{\'e}",
+      editor="Castillo, Oscar
+      and Melin, Patricia
+      and Kacprzyk, Janusz",
+      title="Fuzzy Logic Controller with Fuzzylab Python Library and the Robot Operating System for Autonomous Robot Navigation: A Practical Approach",
+      bookTitle="Intuitionistic and Type-2 Fuzzy Logic Enhancements in Neural and Optimization Algorithms: Theory and Applications",
+      year="2020",
+      publisher="Springer International Publishing",
+      address="Cham",
+      pages="355--369",
+      isbn="978-3-030-35445-9",
+      doi="10.1007/978-3-030-35445-9_27",
+      url="https://doi.org/10.1007/978-3-030-35445-9_27"
     }
-
