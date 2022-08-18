@@ -1,4 +1,6 @@
-import breaking_fis as bf
-from fuzzylab import plotmf
+# https://www.mathworks.com/help/fuzzy/plotmf.html
 
-plotmf(bf.fis,'input',0)
+import fuzzylab as fl
+
+fis = fl.readfis('tipper')
+fl.plotmf(fis,'input', 1)

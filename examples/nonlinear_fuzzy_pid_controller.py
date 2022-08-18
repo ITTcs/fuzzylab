@@ -1,9 +1,9 @@
-from fuzzylab import sugfis, linspace, evalfis
+import fuzzylab as fl
 import numpy as np
 
 # Construct the FIS
 
-fis = sugfis()
+fis = fl.sugfis()
 
 # Define input E
 
@@ -39,8 +39,8 @@ ruleList = [[0, 0, 0, 1, 1], # Rule 1
 fis.addRule(ruleList)
 
 Step = 1
-E = linspace(-10, Step, 10)
-CE = linspace(-10, Step, 10)
+E = fl.arange(-10, Step, 10)
+CE = fl.arange(-10, Step, 10)
 N = len(E)
 
 LookUpTableData = np.zeros((N, N))
@@ -48,6 +48,6 @@ LookUpTableData = np.zeros((N, N))
 for i in range(N):
     for j in range(N):
         # Compute output u for each combination of sample points.
-        LookUpTableData[i,j] = evalfis(fis,[E[i], CE[j]])
+        LookUpTableData[i,j] = fl.evalfis(fis,[E[i], CE[j]])
 
 print(LookUpTableData)

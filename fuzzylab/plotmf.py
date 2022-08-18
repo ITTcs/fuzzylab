@@ -7,10 +7,12 @@ def plotmf(fis, variableType, variableIndex, numPoints=181,
             fontSize=11.5, ylabel='Degree of membership', tex_out='', show=True,
             ggplot=False):
 
+    assert variableIndex > 0, 'Expected input index to be positive.'
+    
     if variableType.lower() == 'input':
-        var = fis.Inputs[variableIndex]
+        var = fis.Inputs[variableIndex - 1]
     else:
-        var = fis.Outputs[variableIndex]
+        var = fis.Outputs[variableIndex - 1]
     
     num_mfs = len(var.MembershipFunctions)
 

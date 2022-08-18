@@ -1,8 +1,13 @@
-from matplotlib.pyplot import plot, xlabel, show
-from fuzzylab import linspace, gaussmf
+# https://www.mathworks.com/help/fuzzy/gaussmf.html
 
-x = linspace(0, 0.1, 10)
-y = gaussmf(x, [2, 5])
-plot(x, y)
-xlabel('gaussmf, P=[2, 5]')
-show()
+import fuzzylab as fl
+import matplotlib.pyplot as plt
+
+x = fl.arange(0, 0.1, 10)
+y = fl.gaussmf(x, [2, 5])
+
+plt.plot(x, y)
+plt.xlabel('gaussmf, P=[2, 5]')
+plt.ylabel('Membership')
+plt.ylim([-0.05, 1.05])
+plt.show()

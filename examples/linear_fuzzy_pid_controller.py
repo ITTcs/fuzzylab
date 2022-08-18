@@ -1,9 +1,9 @@
-from fuzzylab import sugfis, linspace, evalfis
+import fuzzylab as fl
 import numpy as np
 
 # Construct the fuzzy inference system
 
-fis = sugfis()
+fis = fl.sugfis()
 
 # Define input variable E
 
@@ -40,21 +40,21 @@ fis.addMF('u','constant', 20, Name='LargePositive')
 # 8 If E is positive and CE is zero, then u is 10.
 # 9 If E is positive and CE is positive, then u is 20.
 
-ruleList = [[0, 0, 0, 1, 1], # Rule 1
-            [0, 1, 1, 1, 1], # Rule 2
-            [0, 2, 2, 1, 1], # Rule 3
-            [1, 0, 1, 1, 1], # Rule 4
-            [1, 1, 2, 1, 1], # Rule 5
-            [1, 2, 3, 1, 1], # Rule 6
-            [2, 0, 2, 1, 1], # Rule 7
-            [2, 1, 3, 1, 1], # Rule 8
-            [2, 2, 4, 1, 1]] # Rule 9
+ruleList = [[1, 1, 1, 1, 1], # Rule 1
+            [1, 2, 2, 1, 1], # Rule 2
+            [1, 3, 3, 1, 1], # Rule 3
+            [2, 1, 2, 1, 1], # Rule 4
+            [2, 2, 3, 1, 1], # Rule 5
+            [2, 3, 4, 1, 1], # Rule 6
+            [3, 1, 3, 1, 1], # Rule 7
+            [3, 2, 4, 1, 1], # Rule 8
+            [3, 3, 5, 1, 1]] # Rule 9
 
 fis.addRule(ruleList)
 
 Step = 10
-E = linspace(-10, Step, 10)
-CE = linspace(-10, Step, 10)
+E = fl.arange(-10, Step, 10)
+CE = fl.arange(-10, Step, 10)
 N = len(E)
 
 LookUpTableData = np.zeros((N, N))
@@ -62,6 +62,6 @@ LookUpTableData = np.zeros((N, N))
 for i in range(N):
     for j in range(N):
         # Compute output u for each combination of sample points.
-        LookUpTableData[i,j] = evalfis(fis,[E[i], CE[j]])
+        LookUpTableData[i,j] = fl.evalfis(fis,[E[i], CE[j]])
 
 print(LookUpTableData)

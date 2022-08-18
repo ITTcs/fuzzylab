@@ -1,6 +1,6 @@
 # defuzz.py
 # Eduardo Avelar
-# October 2018
+# August 2022
 
 import numpy as np
 

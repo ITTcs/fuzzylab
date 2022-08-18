@@ -1,6 +1,8 @@
-from fuzzylab import linspace, trapmf, defuzz
+# https://www.mathworks.com/help/fuzzy/defuzz.html
 
-x = linspace(-10, 0.1, 10)
-mf = trapmf(x, [-10, -8, -4, 7])
-out = defuzz(x, mf, 'centroid')
+import fuzzylab as fl
+
+x = fl.arange(-10, 0.1, 10)
+mf = fl.trapmf(x, [-10, -8, -4, 7])
+out = fl.defuzz(x, mf, 'centroid')
 print(out)

@@ -1,6 +1,6 @@
 # trapmf.py
 # Eduardo Avelar
-# October 2018
+# August 2022
 
 import numpy as np
 
@@ -22,7 +22,7 @@ def trapmf(x, params):
     """
     assert len(params) == 4, 'Trapezoidal membership function must have four parameters.'
     
-    a, b, c, d = np.asarray(params)
+    a, b, c, d = params
     assert a <= b, 'First parameter must be less than or equal to second parameter.'
     assert b <= c, 'Second parameter must be less than or equal to third parameter.'
     assert c <= d, 'Third parameter must be less than or equal to fourth parameter.'

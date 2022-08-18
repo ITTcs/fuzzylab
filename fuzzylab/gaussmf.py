@@ -4,6 +4,9 @@ def gaussmf(x, params):
     
     assert len(params) == 2, 'Generalized membership function must have two parameters.'
 
-    sig, c = np.asarray(params)
+    sig, c = params
 
-    return np.exp(-pow((x - c), 2) / (2 * pow(sig, 2)))
+    if type(x) is not np.ndarray:
+        x = np.asarray([x])
+
+    return np.exp(-np.power((x - c), 2) / (2 * np.power(sig, 2)))

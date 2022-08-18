@@ -1,6 +1,6 @@
 % Construct the fis
 
-fis = sugfis
+fis = sugfis;
 
 % Define input E
 
@@ -33,7 +33,7 @@ ruleList = [1 1 1 1 1;  % Rule 1
             2 1 2 1 1;  % Rule 3
             2 2 3 1 1]; % Rule 4
 
-fis = addrule(fis, ruleList);
+fis = addRule(fis, ruleList);
 
 Step = 1;
 E = -10:Step:10;
@@ -45,7 +45,7 @@ LookUpTableData = zeros(N);
 for i=1:N
     for j=1:N
         % Compute output u for each combination of sample points
-        LookUpTableData(i,j) = evalfis([E(i) CE(j)], fis);
+        LookUpTableData(i,j) = evalfis(fis, [E(i) CE(j)]);
     end
 end
 

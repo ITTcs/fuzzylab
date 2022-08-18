@@ -7,7 +7,7 @@ class fisvar:
 
         nargin = len(varargin)
 
-        if nargin is 0:
+        if nargin == 0:
             self.Range = [0, 1] 
         else:
             self.Range = varargin[0]

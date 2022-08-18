@@ -1,6 +1,6 @@
-from fuzzylab import sugfis
+import fuzzylab as fl
 
-fis = sugfis('breaking')
+fis = fl.sugfis('breaking')
 
 fis.addInput([0.12, 3.5], Name='distance')
 fis.addMF('distance','gaussmf',[0.31296, 0.1200],Name='minimum')
@@ -19,9 +19,9 @@ fis.addMF('velocity','constant',2.22,Name='maximum')
 # If distance is medium then velocity recommended
 # If distance is long then velocity maximum
 
-ruleList = [[0, 0, 1, 1], # Rule 1
-            [1, 1, 1, 1], # Rule 2
-            [2, 2, 1, 1], # Rule 3
-            [3, 3, 1, 1]] # Rule 4
+ruleList = [[1, 1, 1, 1], # Rule 1
+            [2, 2, 1, 1], # Rule 2
+            [3, 3, 1, 1], # Rule 3
+            [4, 4, 1, 1]] # Rule 4
 
 fis.addRule(ruleList)

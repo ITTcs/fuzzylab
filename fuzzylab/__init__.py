@@ -4,10 +4,11 @@ from fuzzylab.fisrule import fisrule
 from fuzzylab.trimf import trimf
 from fuzzylab.trapmf import trapmf
 from fuzzylab.defuzz import defuzz
-from fuzzylab.linspace import linspace
+from fuzzylab.arange import arange
 from fuzzylab.gbellmf import gbellmf
 from fuzzylab.gaussmf import gaussmf
 from fuzzylab.sugfis import sugfis
+from fuzzylab.mamfis import mamfis
 from fuzzylab.plotmf import plotmf
 from fuzzylab.gensurf import gensurf
 from fuzzylab.evalfis import evalfis

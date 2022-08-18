@@ -6,9 +6,12 @@ from .gaussmf import gaussmf
 from .trapmf import trapmf
 
 def evalmf(mf, x):
+    
     if mf.Type == 'trimf':
-        return trimf(x, mf.Parameters)
+        y = trimf(x, mf.Parameters)
     if mf.Type == 'trapmf':
-        return trapmf(x, mf.Parameters)
+        y = trapmf(x, mf.Parameters)
     elif mf.Type == 'gaussmf':
-        return gaussmf(x, mf.Parameters)
+        y = gaussmf(x, mf.Parameters)
+
+    return y

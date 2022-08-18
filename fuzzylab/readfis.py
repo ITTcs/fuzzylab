@@ -1,4 +1,4 @@
-from fuzzylab import sugfis, fisvar, fismf, fisrule
+from fuzzylab import sugfis, mamfis, fisvar, fismf, fisrule
 import re
 
 def readfis(filename=''):
@@ -68,10 +68,9 @@ def init_fis_struct(fid):
     fis_type = values[1][1:-1]
 
     values = get_line(fid).split('=')
-    assert values[0] == 'Version', 'Version of FIS expected'
-    fis_version = values[1][1:-1]
+    if values[0] =='Version':
+        values = get_line(fid).split('=')
 
-    values = get_line(fid).split('=')
     assert values[0] == 'NumInputs', 'Number of inputs expected'
     num_inputs = int(values[1])
 
@@ -110,6 +109,8 @@ def init_fis_struct(fid):
 
     if fis_type == 'sugeno':
         fis = sugfis(fis_name)
+    elif fis_type == 'mamdani':
+        fis = mamfis(fis_name)
 
     fis.AndMethod               = and_method
     fis.OrMethod                = or_method
@@ -197,7 +198,7 @@ def get_next_fis_io (fid, i, in_or_out):
     ##--------------------------------------------------------------------
 
     values = get_line(fid).split('put')
-    if in_or_out is 'input':     
+    if in_or_out == 'input':     
         assert values[0] == '[In', 'Next input expected'
     else:
         assert values[0] == '[Out', 'Next output expected'
@@ -291,7 +292,7 @@ def get_next_rule(fid, num_inputs):
 def get_line(fid):
     while True:
         line = fid.readline()
-        if(len(line) is 0):
+        if(len(line) == 0):
             break
         line = line.strip()
 
@@ -310,5 +311,5 @@ def get_line(fid):
 ##----------------------------------------------------------------------
 
 def comment_or_empty(line):
-    ret_val = len(line) is 0 or line[0] is '#' or line[0] is '%'
+    ret_val = len(line) == 0 or line[0] == '#' or line[0] == '%'
     return ret_val

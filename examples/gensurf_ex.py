@@ -1,4 +1,4 @@
-import breaking_fis as bf
-from fuzzylab import gensurf
+import fuzzylab as fl
 
-gensurf(bf.fis)
+fis = fl.readfis('breaking')
+fl.gensurf(fis)

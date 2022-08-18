@@ -46,7 +46,7 @@ class FuzzyInferenceSystem:
     def __addVariable(self, in_or_out, *varargin, **options):
         new_variable = fisvar(*varargin, **options)
 
-        if in_or_out is 'input':
+        if in_or_out == 'input':
             self.Inputs.append(new_variable)
             if(options.get('NumMFs')):
                 numMFs = options.get('NumMFs')
@@ -90,7 +90,7 @@ class FuzzyInferenceSystem:
                     self.addMF(var_name, mf_type, params, Name='mf'+str(i+1))
                     b += step
 
-                if numMFs is 2:
+                if numMFs == 2:
                     i = 0
 
                 if(options.get('MFmaxr')):

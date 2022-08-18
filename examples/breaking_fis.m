@@ -22,9 +22,4 @@ ruleList = [1 1 1 1;    % Rule 1
             3 3 1 1;    % Rule 3
             4 4 1 1];   % Rule 4
 
-fis = addrule(fis, ruleList);
-
-y = evalfis(0.12, fis)
-
-plotmf(fis,'input',1);
-gensurf(fis);
+fis = addRule(fis, ruleList);

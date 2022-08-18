@@ -1,32 +1,34 @@
 import numpy as np
 from .evalmf import evalmf
-from .sugfis import sugfis
 from .defuzz import defuzz
 
-def evalfis(fis, user_input, rule_firing=False):
+def evalfis(fis, user_input, rule_firing=False, num_points=101):
 
     if type(user_input) is not np.ndarray:
         user_input = np.asarray([user_input])
 
-    if user_input.ndim is 1:
+    if user_input.ndim == 1:
         user_input = np.asarray([user_input])
 
     m, n = user_input.shape
     num_inputs = len(fis.Inputs)
 
-    if m is num_inputs and n is not num_inputs:
+    if m == num_inputs and n is not num_inputs:
         user_input = user_input.transpose()
 
     output = np.zeros((len(user_input), len(fis.Outputs)))
 
     for i in range(len(user_input)):
         rule_input = fuzzify_input(fis, user_input[i])
+        firing_strength = eval_firing_strength(fis, rule_input)
 
-        firing_strength = eval_firing_strength (fis, rule_input)
-        
-        if type(fis) is sugfis:
+        if fis.Type == 'mamdani':
+            rule_output = eval_rules_mamdani(fis, firing_strength, num_points)
+            fuzzy_output = aggregate_output_mamdani(fis, rule_output)
+            output[i] = defuzzify_output_mamdani(fis, fuzzy_output)
+        elif fis.Type == 'sugeno':
             rule_output = eval_rules_sugeno(fis, firing_strength, user_input[i])
-            fuzzy_output = aggregate_output_sugeno (fis, rule_output)
+            fuzzy_output = aggregate_output_sugeno(fis, rule_output)
             output[i] = defuzzify_output_sugeno (fis, fuzzy_output)
 
     if output.shape == (1,1):
@@ -53,7 +55,7 @@ def fuzzify_input(fis, user_input):
 
             mf_index = antecedent[j] - 1
             mf = fis.Inputs[j].MembershipFunctions[mf_index]
-            mu = evalmf (mf, crisp_x)
+            mu = evalmf(mf, crisp_x)
 
             # Store the fuzzified input in rule_input.    
             rule_input[i, j] = mu
@@ -79,20 +81,108 @@ def eval_firing_strength (fis, rule_input):
         # Collect mu values for all input variables in the antecedent.
         antecedent_mus = []
         for j in range(num_inputs):
-            if rule.Antecedent[j] >= 0:
+            if rule.Antecedent[j] != 0:
                 mu = rule_input[i, j]
                 antecedent_mus.append(mu)
 
         # Compute matching degree of the rule.
-        if rule.Connection is 1:
+        if rule.Connection == 1:
             connect = fis.AndMethod
         else:
             connect = fis.OrMethod
 
-        if connect == 'prod':
+        if connect == 'min':
+            firing_strength[i] = rule.Weight * np.min(antecedent_mus)
+        elif connect == 'max':
+            firing_strength[i] = rule.Weight * np.max(antecedent_mus)
+        elif connect == 'prod':
+            firing_strength[i] = rule.Weight * np.prod(antecedent_mus)
+        elif connect == 'sum':
+            firing_strength[i] = rule.Weight * np.sum(antecedent_mus)
+        elif connect == 'algebraic_product':
             firing_strength[i] = rule.Weight * np.prod(antecedent_mus)
 
     return firing_strength
+
+
+def eval_rules_mamdani(fis, firing_strength, num_points):
+
+    num_rules = len(fis.Rules)
+    num_outputs = len(fis.Outputs)
+
+    # Initialize output matrix to prevent inefficient resizing.
+    rule_output = np.zeros((num_points, num_rules * num_outputs))   
+    
+    # Compute the fuzzy output for each (rule, output) pair:
+    #   1. Apply the FIS implication method to find the fuzzy outputs
+    #      for the current (rule, output) pair.
+    #   2. Store the result as a column in the rule_output matrix.
+    
+    for i in range(num_rules):
+        rule = fis.Rules[i]
+        rule_matching_degree = firing_strength[i]
+
+        if rule_matching_degree != 0:
+            for j in range(num_outputs):
+
+                # Compute the fuzzy output for this (rule, output) pair.
+
+                mf_index = rule.Consequent[j] - 1
+                # mf_index, hedge, not_flag = get_mf_index_and_hedge(
+                #     rule.Consequent[j] - 1)
+
+                # if mf_index != 0:
+
+                    # First, get the fuzzy output, adjusting for the hedge and
+                    # not_flag, but not for the rule matching degree.
+
+                out_range = fis.Outputs[j].Range
+                mf = fis.Outputs[j].MembershipFunctions[mf_index]
+                x = np.linspace(out_range[0], out_range[1], num_points)
+                fuzzy_out = evalmf(mf, x)
+
+                # Adjust the fuzzy output for the rule matching degree.
+
+                if fis.ImplicationMethod == 'min':
+                    fuzzy_out = np.minimum(rule_matching_degree, fuzzy_out)
+
+                rule_output[:, (j - 1) * num_rules + i] = fuzzy_out
+
+    return rule_output
+
+
+def aggregate_output_mamdani(fis, rule_output):
+    num_rules = len(fis.Rules)
+    num_outputs = len(fis.Outputs)
+    num_points = len(rule_output)
+
+    # Initialize output matrix to prevent inefficient resizing.
+    fuzzy_output = np.zeros((num_points, num_outputs))
+
+    # Compute the ith fuzzy output values, then store the values in the
+    # ith column of the fuzzy_output matrix.
+    for i in range(num_outputs):
+        indiv_fuzzy_out = rule_output[:, i*num_rules : (i+1)*num_rules]
+        if fis.AggregationMethod == 'max':
+            agg_fuzzy_out = np.max(indiv_fuzzy_out, axis=1)
+        fuzzy_output[:, i] = agg_fuzzy_out
+
+    return fuzzy_output
+
+
+def defuzzify_output_mamdani(fis, fuzzy_output):
+
+    num_outputs = len(fis.Outputs)
+    num_points = len(fuzzy_output)
+    output = np.zeros(num_outputs)
+
+    for i in range(num_outputs):
+        out_range = fis.Outputs[i].Range
+        x = np.linspace(out_range[0], out_range[1], num_points)
+        y = fuzzy_output[:, i]
+        output[i] = defuzz(x, y, fis.DefuzzificationMethod)
+
+    return output
 
 
 def eval_rules_sugeno(fis, firing_strength, user_input):
@@ -101,7 +191,7 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
     num_outputs = len(fis.Outputs)
 
     # Initialize output matrix to prevent inefficient resizing.
-    rule_output = np.zeros ((2, num_rules * num_outputs))   
+    rule_output = np.zeros((2, num_rules * num_outputs))   
 
     # Compute the (location, height) of the singleton output by each
     # (rule, output) pair:
@@ -118,7 +208,7 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
         rule = fis.Rules[i]
         rule_firing_strength = firing_strength[i]
 
-        if rule_firing_strength is not 0:
+        if rule_firing_strength != 0:
             for j in range(num_outputs):
                 
                 mf_index = rule.Consequent[j] - 1
@@ -131,6 +221,8 @@ def eval_rules_sugeno(fis, firing_strength, user_input):
 
                 if mf.Type == 'constant':
                     location = mf.Parameters[0]
+                elif mf.Type == 'linear':
+                    location = mf.Parameters[0] * np.array([user_input, 1])
 
                 # Store result in column of rule_output corresponding
                 # to the (rule, output) pair.   
@@ -158,10 +250,19 @@ def aggregate_output_sugeno(fis, rule_output):
     return np.asarray(fuzzy_output)
 
 
-#----------------------------------------------------------------------
-# Function: aggregate_fis_output
-# Purpose:  Aggregate the multiple singletons for one FIS output.
-#----------------------------------------------------------------------
+def defuzzify_output_sugeno(fis, aggregated_output):
+
+    num_outputs = len(fis.Outputs)
+    output = np.zeros(num_outputs)
+
+    for i in range(num_outputs):
+        next_agg_output = aggregated_output[i]
+        x = next_agg_output[0]
+        y = next_agg_output[1]
+        output[i] = defuzz(x, y, fis.DefuzzificationMethod)
+
+    return output
+
 
 def aggregate_fis_output(fis_aggmethod, rule_output):
 
@@ -194,17 +295,3 @@ def remove_null_rows(x):
             y.append(x[i])
 
     return np.asarray(y)
-
-
-def defuzzify_output_sugeno(fis, aggregated_output):
-
-    num_outputs = len(fis.Outputs)
-    output = np.zeros(num_outputs)
-
-    for i in range(num_outputs):
-        next_agg_output = aggregated_output[i]
-        x = next_agg_output[0]
-        y = next_agg_output[1]
-        output[i] = defuzz(x, y, fis.DefuzzificationMethod)
-
-    return output

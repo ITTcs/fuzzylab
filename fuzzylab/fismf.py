@@ -6,7 +6,7 @@ class fismf:
 
         nargin = len(varargin)
 
-        if nargin is 0:
+        if nargin == 0:
             self.Type = 'trimf'
             self.Parameters = [0, 0.5, 1]
         else:

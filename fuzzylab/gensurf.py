@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
-import numpy as np
-
-from .evalfis import evalfis
+import fuzzylab as fl
 
 def gensurf(fis):
 
@@ -9,8 +7,10 @@ def gensurf(fis):
     plt.xlabel(fis.Inputs[0].Name)
     plt.ylabel(fis.Outputs[0].Name)
 
-    x = np.linspace(fis.Inputs[0].Range[0], fis.Inputs[0].Range[1], 101)
-    y = evalfis(fis, x)
+    start, stop = fis.Inputs[0].Range
+
+    x = fl.arange(start, 0.01, stop)
+    y = fl.evalfis(fis, x)
 
     plt.plot(x, y)
     plt.show()

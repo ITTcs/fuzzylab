@@ -1,6 +1,6 @@
 # trimf.py
 # Eduardo Avelar
-# October 2018
+# August 2022
 
 import numpy as np
 
@@ -23,7 +23,7 @@ def trimf(x, params):
     """
     assert len(params) == 3, 'Triangular membership function must have three parameters.'
 
-    a, b, c = np.asarray(params)
+    a, b, c = params
     assert a <= b, 'First parameter must be less than or equal to second parameter.'
     assert b <= c, 'Second parameter must be less than or equal to third parameter.'
 

@@ -1,8 +1,8 @@
-# linspace.py
+# arange.py
 # Eduardo Avelar
-# October 2018
+# August 2022
 
 import numpy as np
 
-def linspace(start, step, stop):
+def arange(start, step, stop):
     return np.linspace(start, stop, int(abs(stop - start) / step) + 1)

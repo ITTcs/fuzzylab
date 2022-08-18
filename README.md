@@ -1,8 +1,9 @@
 # fuzzylab
-Python Fuzzy Logic library based on Octave Fuzzy Logic Toolkit, considered as a mostly MATLAB-compatible fuzzy logic toolkit for Octave.
+Python Fuzzy Logic library based on Octave Fuzzy Logic Toolkit 0.4.6, considered as a mostly MATLAB-compatible fuzzy logic toolkit for Octave.
 
-The way to use the fuzzylab functions is based on Matlab R2019a Fuzzy Logic Toolbox functions.
+The way to use the fuzzylab functions is based on Matlab R2022a Fuzzy Logic Toolbox functions.
 
+This library is more mature compared to the first version and will receive periodic updates.
 
 ## Research work
 
@@ -16,43 +17,49 @@ pip install fuzzylab
 
 ## Usage
 
-In the folder [notebooks](https://github.com/ITTcs/fuzzylab/tree/master/notebooks) there are notebook examples, for a starting point of the library.
+In the folder [examples](examples) there are some code snippets and the equivalent matlab code for a starting point using the library.
 
-In all the notebooks it is initialized installing the fuzzylab library with 
+We use `fl` as the alias for `fuzzylab`.
 
-```
-!pip install -U fuzzylab
-```
-
-that use `!` for execute terminal commands in the cell.
-
-For plot in the notebook with the matplotlib library it is necessary to specify it with
-
-```
-%matplotlib inline
-```
-
-Now you can import the fuzzy library with
-
-```
-from fuzzylab import *
+```python
+import fuzzylab as fl
 ```
 
 ## Example
 
 ```python
-import numpy as np
-from matplotlib.pyplot import *
-from fuzzylab import *
+import fuzzylab as fl
+import matplotlib.pyplot as plt
 
-x = np.linspace(0, 10, 101)
-y = trimf(x, [3, 6, 8])
-plot(x, y)
-xlabel('trimf, P = [3, 6, 8]')
-show()
+x = fl.arange(0, 0.1, 10)
+y = fl.trimf(x, [3, 6, 8])
+
+plt.plot(x,y)
+plt.title('trimf, P = [3, 6, 8]')
+plt.xlabel('x')
+plt.ylabel('Degree of Membership')
+plt.ylim([-0.05, 1.05])
+plt.show()
 ```
 
-![trimf](https://raw.githubusercontent.com/ITTcs/fuzzylab/master/images/trimf.png)
+![trimf](images/trimf.png)
+
+Also we can use a more matlab code style
+
+```python
+from fuzzylab import arange, trimf
+from matplotlib.pyplot import plot, title, xlabel, ylabel, ylim, show
+
+x = arange(0, 0.1, 10)
+y = trimf(x, [3, 6, 8])
+
+plot(x,y)
+title('trimf, P = [3, 6, 8]')
+xlabel('x')
+ylabel('Degree of Membership')
+ylim([-0.05, 1.05])
+show()
+```
 
 ## Citing fuzzylab
 
