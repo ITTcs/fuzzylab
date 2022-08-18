@@ -17,7 +17,7 @@ pip install fuzzylab
 
 ## Usage
 
-In the folder [examples](examples) there are some code snippets and the equivalent matlab code for a starting point using the library.
+In the folder [examples](https://github.com/ITTcs/fuzzylab/tree/master/examples) there are some code snippets and the equivalent matlab code for a starting point using the library.
 
 We use `fl` as the alias for `fuzzylab`.
 
@@ -42,7 +42,7 @@ plt.ylim([-0.05, 1.05])
 plt.show()
 ```
 
-![trimf](images/trimf.png)
+![trimf](https://raw.githubusercontent.com/ITTcs/fuzzylab/master/images/trimf.png)
 
 Also we can use a more matlab code style
 
